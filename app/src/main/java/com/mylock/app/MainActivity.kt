@@ -22,6 +22,14 @@ class MainActivity : AppCompatActivity() {
         btnPermissions.setOnClickListener {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
+
+        // Optional: If you added a settings button to activity_main.xml, handle it here
+        /*
+        val btnSettings = findViewById<Button>(R.id.btnSettings)
+        btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        */
     }
 
     override fun onResume() {
@@ -52,13 +60,11 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("MyLockPrefs", Context.MODE_PRIVATE)
 
         for (appInfo in packages) {
-            // Filter to show launchable apps or user apps
             if (pm.getLaunchIntentForPackage(appInfo.packageName) != null) {
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val icon = pm.getApplicationIcon(appInfo)
                 val isLocked = prefs.getBoolean("lock_${appInfo.packageName}", false)
 
-                // Skip our own app from being locked
                 if (appInfo.packageName != packageName) {
                     appList.add(AppItem(appName, appInfo.packageName, icon, isLocked))
                 }
@@ -69,9 +75,4 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = AppAdapter(this, appList)
     }
-
-  val btnSettings = findViewById<Button>(R.id.btnSettings)
-btnSettings.setOnClickListener {
-    startActivity(Intent(this, SettingsActivity::class.java))
-}
 }
