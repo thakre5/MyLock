@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
             val savedPin = prefs.getString("APP_PIN", "1234")
 
             if (enteredOld != savedPin) {
-                Toast.init(this, "Current PIN is incorrect", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Current PIN is incorrect", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -34,7 +34,6 @@ class SettingsActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Save the new PIN locally
             prefs.edit().putString("APP_PIN", enteredNew).apply()
             Toast.makeText(this, "PIN successfully updated!", Toast.LENGTH_SHORT).show()
             finish()
