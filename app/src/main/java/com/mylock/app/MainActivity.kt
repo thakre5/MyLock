@@ -69,4 +69,9 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = AppAdapter(this, appList)
     }
+
+  val btnSettings = findViewById<Button>(R.id.btnSettings)
+btnSettings.setOnClickListener {
+    startActivity(Intent(this, SettingsActivity::class.java))
+}
 }
