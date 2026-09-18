@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change App PIN"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etOldPin"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Current PIN"
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/etNewPin"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter New PIN"
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btnSavePin"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Save New PIN"
+        android:backgroundTint="#6200EE"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
