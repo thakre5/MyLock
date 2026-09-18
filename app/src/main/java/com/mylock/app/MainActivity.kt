@@ -3,11 +3,14 @@ package com.mylock.app
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,17 +20,16 @@ class MainActivity : AppCompatActivity() {
 
         val btnPermissions = findViewById<Button>(R.id.btnPermissions)
         btnPermissions.setOnClickListener {
-            // Open Usage Access Settings for the user to grant permission
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Check if usage stats permission is granted when returning to the app
         if (hasUsageStatsPermission()) {
-            Toast.makeText(this, "Permissions Active! Starting MyLock Service...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Permissions Active! Loading Apps...", Toast.LENGTH_SHORT).show()
             startService(Intent(this, MonitorService::class.java))
+            loadInstalledApps()
         } else {
             Toast.makeText(this, "Please grant Usage Access permission to enable MyLock", Toast.LENGTH_LONG).show()
         }
@@ -41,5 +43,30 @@ class MainActivity : AppCompatActivity() {
             packageName
         )
         return mode == AppOpsManager.MODE_ALLOWED
+    }
+
+    private fun loadInstalledApps() {
+        val pm = packageManager
+        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        val appList = mutableListOf<AppItem>()
+        val prefs = getSharedPreferences("MyLockPrefs", Context.MODE_PRIVATE)
+
+        for (appInfo in packages) {
+            // Filter to show launchable apps or user apps
+            if (pm.getLaunchIntentForPackage(appInfo.packageName) != null) {
+                val appName = pm.getApplicationLabel(appInfo).toString()
+                val icon = pm.getApplicationIcon(appInfo)
+                val isLocked = prefs.getBoolean("lock_${appInfo.packageName}", false)
+
+                // Skip our own app from being locked
+                if (appInfo.packageName != packageName) {
+                    appList.add(AppItem(appName, appInfo.packageName, icon, isLocked))
+                }
+            }
+        }
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewApps)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = AppAdapter(this, appList)
     }
 }
