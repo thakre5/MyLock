@@ -23,11 +23,11 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK with Gradle
+    - name: Build APK with Gradle
       run: ./gradlew assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MyLock-Debug-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: MyLock-APK
+        path: app/build/outputs/apk/debug/MyLock-1.0.apk
