@@ -1,27 +1,37 @@
 package com.mylock.app
 
-content class AppItem(
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.RecyclerView
+
+data class AppItem(
     val appName: String,
     val packageName: String,
-    val appIcon: android.graphics.drawable.Drawable,
+    val appIcon: Drawable,
     var isLocked: Boolean
 )
 
 class AppAdapter(
-    private val context: android.content.Context,
+    private val context: Context,
     private val appList: List<AppItem>
-) : androidx.recyclerview.widget.RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
+) : RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
 
-    private val prefs = context.getSharedPreferences("MyLockPrefs", android.content.Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences("MyLockPrefs", Context.MODE_PRIVATE)
 
-    class AppViewHolder(view: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        val imgIcon: android.widget.ImageView = view.findViewById(R.id.imgAppIcon)
-        val tvName: android.widget.TextView = view.findViewById(R.id.tvAppName)
-        val switchLock: androidx.appcompat.widget.SwitchCompat = view.findViewById(R.id.switchLock)
+    class AppViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val imgIcon: ImageView = view.findViewById(R.id.imgAppIcon)
+        val tvName: TextView = view.findViewById(R.id.tvAppName)
+        val switchLock: SwitchCompat = view.findViewById(R.id.switchLock)
     }
 
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): AppViewHolder {
-        val view = android.view.LayoutInflater.from(parent.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_app, parent, false)
         return AppViewHolder(view)
     }
@@ -30,9 +40,9 @@ class AppAdapter(
         val app = appList[position]
         holder.tvName.text = app.appName
         holder.imgIcon.setImageDrawable(app.appIcon)
-        holder.switchLock.isChecked = app.isLocked
-
-        holder.switchLock.setOnbuttonChangeListener(null) // Prevent glitching during recycling
+        
+        // Clear listener first to avoid recycling bugs
+        holder.switchLock.setOnCheckedChangeListener(null)
         holder.switchLock.isChecked = app.isLocked
 
         holder.switchLock.setOnCheckedChangeListener { _, isChecked ->
